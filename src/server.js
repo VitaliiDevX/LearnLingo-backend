@@ -1,0 +1,47 @@
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
+import { errors } from 'celebrate';
+import cookieParser from 'cookie-parser';
+import { connectMongoDB } from './db/connectMongoDB.js';
+import { logger } from './middleware/logger.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import teachersRoutes from './routes/teachersRoutes.js';
+import languagesRoutes from './routes/languagesRoutes.js';
+import pricesRoutes from './routes/pricesRoutes.js';
+
+const app = express();
+const PORT = process.env.PORT ?? 3000;
+
+app.use(logger);
+app.use(express.json());
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_DOMAIN, 'http://localhost:5173'],
+    credentials: true,
+  }),
+);
+app.use(cookieParser());
+
+//!ROUTES
+app.use('/teachers', teachersRoutes);
+app.use('/languages', languagesRoutes);
+app.use('/prices', pricesRoutes);
+
+//!ERRORS
+app.use(errors());
+app.use(notFoundHandler);
+app.use(errorHandler);
+
+//! MONGODB connection
+await connectMongoDB();
+
+//! Server connection
+app
+  .listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  })
+  .on('error', (err) => {
+    console.error('Server error:', err);
+  });
