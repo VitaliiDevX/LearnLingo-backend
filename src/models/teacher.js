@@ -19,7 +19,7 @@ const teacherSchema = new Schema(
     reviews: [reviewSchema],
     price_per_hour: { type: Number, required: true, index: true },
     lessons_done: { type: Number, required: true, min: 0 },
-    avatar_url: { type: String, required: true },
+    avatar_url: { type: String, default: null },
     lesson_info: { type: String, required: true },
     conditions: { type: [String], required: true },
     experience: { type: String, required: true },

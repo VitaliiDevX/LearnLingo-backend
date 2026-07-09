@@ -5,8 +5,8 @@ export const getTeachersController = async (req, res, next) => {
   const skip = (Number(page) - 1) * Number(perPage);
 
   const filter = {};
-  if (language) filter.languages = { $in: [language] };
-  if (level) filter.levels = { $in: [level] };
+  if (language && language.trim() !== '') filter.languages = language;
+  if (level && level.trim() !== '') filter.levels = level;
   if (price) filter.price_per_hour = { $lte: Number(price) };
 
   const teacherQuery = Teacher.find(filter);
