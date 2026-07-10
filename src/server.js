@@ -14,6 +14,7 @@ import teacherRoutes from './routes/teacherRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import languageRoutes from './routes/languageRoutes.js';
 import priceRoutes from './routes/priceRoutes.js';
+import { setupSwagger } from './swagger/swagger.js';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -35,6 +36,9 @@ app.use('/teachers', teacherRoutes);
 app.use('/users', userRoutes);
 app.use('/languages', languageRoutes);
 app.use('/prices', priceRoutes);
+
+//!SWAGGER
+setupSwagger(app);
 
 //!ERRORS
 app.use(errors());
