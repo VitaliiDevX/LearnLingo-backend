@@ -4,7 +4,7 @@ import { Price } from '../models/price.js';
 export const getPrices = async (req, res) => {
   const prices = await Price.find().sort({ value: 1 });
 
-  if (!prices) {
+  if (prices.length === 0) {
     throw createHttpError(404, 'Prices not found');
   }
 

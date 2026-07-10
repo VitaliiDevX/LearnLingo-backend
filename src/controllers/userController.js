@@ -1,7 +1,6 @@
 import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
-import { EmailVerification } from '../models/emailVerification.js';
 import { Teacher } from './../models/teacher.js';
 
 export const getUserProfile = async (req, res) => {
@@ -59,7 +58,7 @@ export const addToFavorites = async (req, res) => {
     $addToSet: { favoriteTeachers: teacherId },
   });
 
-  res.status(200).json({ message: 'Teacher added' });
+  res.status(200).json({ message: 'Teacher added to favorites' });
 };
 
 export const removeFromFavorites = async (req, res) => {
@@ -69,7 +68,7 @@ export const removeFromFavorites = async (req, res) => {
     $pull: { favoriteTeachers: teacherId },
   });
 
-  res.status(200).json({ message: 'Teacher removed' });
+  res.status(200).json({ message: 'Teacher removed from favorites' });
 };
 
 export const deleteUser = async (req, res) => {
@@ -78,12 +77,11 @@ export const deleteUser = async (req, res) => {
   await Promise.all([
     User.findByIdAndDelete(userId),
     Session.deleteMany({ userId }),
-    EmailVerification.deleteMany({ userId }),
   ]);
 
   res.clearCookie('sessionId');
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
 
-  res.status(200).json({ message: 'User deleted' });
+  res.status(200).json({ message: 'User deleted successfully' });
 };

@@ -4,7 +4,7 @@ import { Language } from '../models/language.js';
 export const getLanguages = async (req, res) => {
   const languages = await Language.find();
 
-  if (!languages) {
+  if (languages.length === 0) {
     throw createHttpError(404, 'Languages not found');
   }
 
