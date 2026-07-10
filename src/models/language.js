@@ -12,6 +12,4 @@ const languageSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
-languageSchema.index({ name: 1 });
-
 export const Language = model('Language', languageSchema);

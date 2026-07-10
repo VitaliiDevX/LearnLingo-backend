@@ -7,6 +7,4 @@ const priceSchema = new Schema(
   { versionKey: false, timestamps: true },
 );
 
-priceSchema.index({ value: 1 });
-
 export const Price = model('Price', priceSchema);
