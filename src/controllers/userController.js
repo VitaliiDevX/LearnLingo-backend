@@ -25,23 +25,27 @@ export const updateUser = async (req, res) => {
 
 export const getFavoriteTeachers = async (req, res) => {
   const { page = 1, perPage = 4 } = req.query;
-  const skip = (Number(page) - 1) * Number(perPage);
+  const skip = (page - 1) * perPage;
 
-  const user = await User.findById(req.user._id);
-  const favoriteIds = user.favoriteTeachers;
+  const user = await User.findById(req.user._id)
+    .select('favorite_teachers')
+    .lean();
+
+  const favoriteIds = user?.favorite_teachers || [];
 
   const [totalItems, teachers] = await Promise.all([
     Teacher.countDocuments({ _id: { $in: favoriteIds } }),
     Teacher.find({ _id: { $in: favoriteIds } })
       .skip(skip)
-      .limit(Number(perPage)),
+      .limit(perPage)
+      .lean(),
   ]);
 
-  const totalPages = Math.ceil(totalItems / Number(perPage));
+  const totalPages = Math.ceil(totalItems / perPage);
 
   res.status(200).json({
-    page: Number(page),
-    perPage: Number(perPage),
+    page: page,
+    perPage: perPage,
     totalItems,
     totalPages,
     teachers,
@@ -55,7 +59,7 @@ export const addToFavorites = async (req, res) => {
   if (!teacherExists) throw createHttpError(404, 'Teacher not found');
 
   await User.findByIdAndUpdate(req.user._id, {
-    $addToSet: { favoriteTeachers: teacherId },
+    $addToSet: { favorite_teachers: teacherId },
   });
 
   res.status(200).json({ message: 'Teacher added to favorites' });
@@ -65,7 +69,7 @@ export const removeFromFavorites = async (req, res) => {
   const { teacherId } = req.params;
 
   await User.findByIdAndUpdate(req.user._id, {
-    $pull: { favoriteTeachers: teacherId },
+    $pull: { favorite_teachers: teacherId },
   });
 
   res.status(200).json({ message: 'Teacher removed from favorites' });
