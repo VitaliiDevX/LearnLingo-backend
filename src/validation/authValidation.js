@@ -1,16 +1,17 @@
 import { Joi, Segments } from 'celebrate';
+import { emailRules, nameRules, passwordRules } from './common.js';
 
 export const registerSchema = {
-  [Segments.BODY]: Joi.object().keys({
-    name: Joi.string().min(3).max(32).required(),
-    email: Joi.string().email().max(64).required(),
-    password: Joi.string().min(8).max(128).required(),
+  [Segments.BODY]: Joi.object({
+    name: nameRules.required(),
+    email: emailRules.required(),
+    password: passwordRules.required(),
   }),
 };
 
 export const loginSchema = {
-  [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().email().required(),
-    password: Joi.string().required(),
+  [Segments.BODY]: Joi.object({
+    email: emailRules.required(),
+    password: passwordRules.required(),
   }),
 };

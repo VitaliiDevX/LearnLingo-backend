@@ -1,11 +1,15 @@
 import { Joi, Segments } from 'celebrate';
+import { paginationRules, teacherIdRules } from './common.js';
 
 export const getTeachersSchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1).default(1),
-    perPage: Joi.number().integer().min(1).max(20).default(4),
+    ...paginationRules,
     language: Joi.string().trim().allow('').optional(),
     level: Joi.string().trim().allow('').optional(),
     price: Joi.number().positive().optional(),
   }),
+};
+
+export const teacherParamSchema = {
+  [Segments.PARAMS]: Joi.object(teacherIdRules),
 };

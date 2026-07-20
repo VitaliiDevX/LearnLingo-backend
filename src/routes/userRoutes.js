@@ -11,9 +11,10 @@ import {
 
 import { authenticate } from '../middleware/authenticate.js';
 import {
-  teacherParamSchema,
+  getFavoritesSchema,
   updateUserSchema,
 } from '../validation/userValidation.js';
+import { teacherParamSchema } from '../validation/teacherValidation.js';
 
 const router = Router();
 
@@ -22,7 +23,12 @@ router.patch('/me', authenticate, celebrate(updateUserSchema), updateUser);
 
 router.delete('/me', authenticate, deleteUser);
 
-router.get('/favorites', authenticate, getFavoriteTeachers);
+router.get(
+  '/favorites',
+  authenticate,
+  celebrate(getFavoritesSchema),
+  getFavoriteTeachers,
+);
 
 router.post(
   '/favorites/:teacherId',
@@ -30,6 +36,11 @@ router.post(
   celebrate(teacherParamSchema),
   addToFavorites,
 );
-router.delete('/favorites/:teacherId', authenticate, removeFromFavorites);
+router.delete(
+  '/favorites/:teacherId',
+  authenticate,
+  celebrate(teacherParamSchema),
+  removeFromFavorites,
+);
 
 export default router;
