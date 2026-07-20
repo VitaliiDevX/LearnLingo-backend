@@ -11,7 +11,10 @@ const userSchema = new Schema(
     },
     favorite_teachers: [{ type: Schema.Types.ObjectId, ref: 'Teacher' }],
   },
-  { timestamps: false, versionKey: false },
+  {
+    versionKey: false,
+    timestamps: true,
+  },
 );
 
 userSchema.methods.toJSON = function () {
